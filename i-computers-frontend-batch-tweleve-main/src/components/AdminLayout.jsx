@@ -1,0 +1,10 @@
+import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
+import { FiBox, FiClipboard, FiGrid, FiLogOut, FiPlus, FiShoppingBag, FiUsers } from "react-icons/fi";
+import { useUser } from "../context/userContext";
+
+export default function AdminLayout(){
+ const {user,logout}=useUser(); const navigate=useNavigate();
+ const nav=[['/admin','Dashboard',FiGrid,true],['/admin/products','Products',FiBox],['/admin/products/add','Add Product',FiPlus],['/admin/orders','Orders',FiClipboard],['/admin/users','Users',FiUsers]];
+ const logoutNow=()=>{logout();navigate('/login',{replace:true});};
+ return <div className="min-h-screen bg-[#f6f8fc]"><aside className="admin-sidebar"><Link to="/admin" className="flex items-center gap-3 px-3"><span className="brand-mark">iC</span><span><b className="block text-white">i-Computers</b><small className="text-slate-400">Control Center</small></span></Link><nav className="mt-10 space-y-2">{nav.map(([to,label,Icon,end])=><NavLink key={to} to={to} end={end} className={({isActive})=>`admin-nav ${isActive?'admin-nav-active':''}`}><Icon size={19}/><span>{label}</span></NavLink>)}</nav><div className="mt-auto pt-8"><Link to="/" className="admin-nav"><FiShoppingBag/> Storefront</Link><button onClick={logoutNow} className="admin-nav w-full text-red-300"><FiLogOut/> Logout</button></div></aside><div className="admin-main"><header className="admin-topbar"><div><p className="text-xs font-bold uppercase tracking-widest text-blue-600">Administration</p><h1 className="text-xl font-black text-slate-900">i-Computers Admin</h1></div><div className="flex items-center gap-3"><Link to="/" className="hidden rounded-xl border bg-white px-4 py-2 text-sm font-bold text-slate-600 hover:bg-slate-50 sm:block">View Store</Link><div className="flex items-center gap-2 rounded-xl bg-white px-3 py-2 shadow-sm ring-1 ring-slate-200"><span className="avatar">{(user?.name||'A')[0]}</span><span className="hidden text-sm font-bold sm:block">{user?.name||'Admin'}</span></div></div></header><main className="p-4 sm:p-6 lg:p-8"><Outlet/></main></div></div>;
+}
